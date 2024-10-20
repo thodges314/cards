@@ -21,12 +21,17 @@ defmodule Cards do
   end
   def load(filename) do
     # binary = File.read!(filename)
-    {status, binary} = File.read(filename)
-    case status do
-      :ok -> :erlang.binary_to_term(binary)
-      :error -> raise "Error reading file: #{status}" # this looks like a formal error version
+    # {status, binary} =
+    case File.read(filename) do
+      {:ok, binary} -> :erlang.binary_to_term(binary)
+      {:error, _reason} -> raise "Error reading file" # this looks like a formal error version
     end
-    # :erlang.binary_to_term(binary)
+  end
+  def create_hand(hand_size) do
+    Cards.create_deck() # these pipes pass prev value as first arg
+    |> Cards.shuffle()
+    |> Cards.deal(hand_size)
+    # |> List.first()
   end
 
   # def deal_card(deck) do
